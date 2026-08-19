@@ -19,24 +19,14 @@
         <span class="tag">read the room</span>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="icon-btn" id="watch-toggle" title="Keyword watch">🔔</button>
         <button class="theme-btn" id="theme-btn" title="Toggle dark / light">🌙 Dark</button>
         <button class="help-btn" id="help-btn" title="How to use ECHO">?</button>
       </div>
     </header>
 
     <div class="onboard" id="onboard">
-      <span>👋 New here? ECHO shows what Hacker News is <b>talking about right now</b>. Tap a story to read the room. Try <b>"Hot right now"</b> + <b>"Explain"</b> to get plain-English context.</span>
+      <span>👋 New here? ECHO shows what Hacker News is <b>talking about right now</b>. Tap a story to read the room. Tap <b>"Hot right now"</b> to see what's exploding this minute.</span>
       <button id="onboard-close">Got it</button>
-    </div>
-
-    <!-- keyword watch bar (collapsible) -->
-    <div class="watchbar" id="watchbar" hidden>
-      <span>🔔 Watch:</span>
-      <input type="text" id="watch-input" placeholder="e.g. rust, layoffs, openai" />
-      <button id="watch-add">Add</button>
-      <div class="watch-chips" id="watch-chips"></div>
-      <span class="watch-status" id="watch-status"></span>
     </div>
 
     <main class="layout">
@@ -47,11 +37,9 @@
           <button class="tab" data-feed="ask">Ask</button>
           <button class="tab" data-feed="show">Show</button>
           <button class="tab" data-feed="job">Jobs</button>
-          <button class="tab sort active" id="sort-hot" data-sort="hot">🔥 Hot</button>
-          <button class="tab" id="history-btn" title="Time travel">⏱ <span id="history-label">now</span></button>
-          <button class="tab" id="rooms-btn">★ Rooms</button>
+          <button class="tab sort active" id="sort-hot" data-sort="hot">🔥 Hot right now</button>
+          <button class="tab" id="rooms-btn">★ My rooms</button>
         </div>
-        <div class="history-pop" id="history-pop" hidden></div>
         <div class="feed-list" id="feed-list">
           <div class="loading">tuning in…</div>
         </div>
@@ -61,13 +49,11 @@
         <div class="reader-empty" id="reader-empty">
           <div class="reader-glyph">◈</div>
           <p>Pick a story to read the room.</p>
-          <p class="hint">"Hot right now" shows stories gaining replies fastest. Velocity = how fast people are talking. "Explain" gives plain-English context.</p>
+          <p class="hint">"Hot right now" shows stories gaining replies fastest. The meter tells you how fast people are talking.</p>
         </div>
         <article class="story" id="story" hidden>
           <div class="story-actions">
             <button class="save-btn" id="save-btn">☆ Save</button>
-            <button class="icon-btn" id="reader-mode-btn" title="Focus / reader mode">📖</button>
-            <button class="icon-btn" id="share-btn" title="Share card">📤</button>
           </div>
           <div class="story-meta">
             <span class="story-score" id="s-score"></span>
@@ -82,32 +68,10 @@
             <div class="velo-track"><div class="velo-fill" id="s-velo"></div></div>
             <span class="velo-num" id="s-velo-num"></span>
           </div>
-          <div class="action-row">
-            <button class="mini-btn" id="summary-btn">✨ Summarize</button>
-            <button class="mini-btn" id="explain-btn">💡 Explain</button>
-            <button class="mini-btn" id="source-btn">🔍 Source</button>
-          </div>
-          <div class="sentiment" id="sentiment" hidden>
-            <span class="sent-label">room mood</span>
-            <div class="sent-bar"><i id="sent-fill"></i></div>
-            <span class="sent-num" id="sent-num"></span>
-          </div>
+          <button class="summary-btn" id="summary-btn">✨ Summarize the debate</button>
           <div class="summary-box" id="summary-box" hidden></div>
-          <div class="source-box" id="source-box" hidden></div>
-          <details class="voices" id="voices">
-            <summary>👥 Who's talking</summary>
-            <div class="voices-list" id="voices-list"></div>
-          </details>
-          <div class="comments-block">
-            <h3 class="cb-head">Comments</h3>
-            <div class="comments" id="comments">
-              <div class="loading">loading the conversation…</div>
-            </div>
-            <div class="comment-form" id="comment-form">
-              <input type="text" id="comment-input" placeholder="Add a note on this thread (saved on your device)…" />
-              <button id="comment-send">Post</button>
-            </div>
-            <div class="my-comments" id="my-comments"></div>
+          <div class="comments" id="comments">
+            <div class="loading">loading the conversation…</div>
           </div>
         </article>
       </section>
@@ -118,14 +82,12 @@
         <h2>★ My rooms</h2>
         <button id="rooms-close">✕</button>
       </div>
-      <p class="rooms-sub">Save searches (feed + keyword + sort) as named views. Stored on your device.</p>
+      <p class="rooms-sub">Save stories into rooms to group them. Stored on your device.</p>
       <div class="rooms-list" id="rooms-list"></div>
       <div class="room-new">
-        <input type="text" id="room-name" placeholder="New room (e.g. AI watch)" />
+        <input type="text" id="room-name" placeholder="New room name (e.g. AI watch)" />
         <button id="room-add">Add</button>
       </div>
-      <p class="rooms-hint">Tip: set a feed + keyword + sort, then "Save view" to capture it.</p>
-      <button class="room-save-view" id="room-save-view">💾 Save current view</button>
     </div>
   </div>
 
@@ -134,22 +96,15 @@
       <h2>How to use ECHO</h2>
       <ul>
         <li><b>Top / New / Ask / Show / Jobs</b> — pick what to read.</li>
-        <li><b>🔥 Hot right now</b> — sorts by how fast replies arrive this minute.</li>
-        <li><b>Velocity meter</b> — how quickly people are commenting.</li>
-        <li><b>✨ Summarize</b> — AI distills what commenters argue about.</li>
-        <li><b>💡 Explain</b> — plain-English context for newcomers.</li>
-        <li><b>🔍 Source</b> — paywall/archived/bias check on the link.</li>
-        <li><b>👥 Who's talking</b> — most-cited voices in the thread.</li>
-        <li><b>⏱ Time travel</b> — scrub back to earlier front pages.</li>
-        <li><b>🔔 Watch</b> — get a badge when keywords appear.</li>
-        <li><b>★ Rooms</b> — save searches & stories your way.</li>
-        <li><b>📤 Share</b> — turn a story into a card.</li>
+        <li><b>🔥 Hot right now</b> — sorts by how fast replies are arriving this minute (not total score).</li>
+        <li><b>Velocity meter</b> — how quickly people are commenting. Full bar = busy debate.</li>
+        <li><b>✨ Summarize the debate</b> — AI explains what commenters are arguing about.</li>
+        <li><b>☆ Save / ★ My rooms</b> — keep stories you like, grouped your way.</li>
       </ul>
       <button id="help-close">Close</button>
     </div>
   </div>
 
-  <canvas id="share-canvas" width="1200" height="630" hidden></canvas>
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>

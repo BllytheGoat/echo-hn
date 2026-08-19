@@ -70,7 +70,6 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 /* reader */
 .reader{background:#fff;border:3px solid var(--line);box-shadow:6px 6px 0 var(--red);
   border-radius:var(--r);padding:20px;overflow-y:auto;max-height:82vh;overflow-x:hidden}
-* { max-width: 100%; }
 .story-actions{margin-bottom:10px}
 .save-btn{background:var(--yellow);border:2px solid var(--line);color:var(--ink);
   box-shadow:3px 3px 0 var(--line);border-radius:0;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:800}
@@ -110,8 +109,9 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .cm-head{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--ink);
   font-family:"JetBrains Mono",monospace;margin-bottom:4px;font-weight:600}
 .cm-by{color:var(--ink);font-weight:800}
-.cm-text{padding-left:12px;border-left:3px solid var(--line);color:var(--ink);font-weight:500}
+.cm-text{padding-left:12px;border-left:3px solid var(--line);color:var(--ink);font-weight:500;overflow-wrap:break-word;word-break:break-word}
 .cm-text p{margin:0 0 8px}
+.cm-text pre,.cm-text code{white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%}
 .cm.collapsed .cm-text,.cm.collapsed .cm-kids{display:none}
 .cm-toggle{cursor:pointer;color:var(--red);user-select:none;font-weight:800}
 .cm-kids{margin-top:12px;padding-left:16px;border-left:2px solid var(--line);

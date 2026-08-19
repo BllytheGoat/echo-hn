@@ -69,7 +69,8 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 
 /* reader */
 .reader{background:#fff;border:3px solid var(--line);box-shadow:6px 6px 0 var(--red);
-  border-radius:var(--r);padding:20px;overflow-y:auto;max-height:82vh}
+  border-radius:var(--r);padding:20px;overflow-y:auto;max-height:82vh;overflow-x:hidden}
+* { max-width: 100%; }
 .story-actions{margin-bottom:10px}
 .save-btn{background:var(--yellow);border:2px solid var(--line);color:var(--ink);
   box-shadow:3px 3px 0 var(--line);border-radius:0;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:800}
@@ -80,9 +81,10 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .story-score{color:var(--red)}
 .hot-badge{font-size:10px;color:var(--ink);background:var(--yellow);padding:2px 7px;border:2px solid var(--line);font-weight:800}
 .story-title{font-family:"Space Grotesk",sans-serif;font-size:clamp(20px,3vw,28px);
-  font-weight:800;line-height:1.1;letter-spacing:-.01em;margin-bottom:8px}
-.story-link{display:inline-block;font-size:12px;color:var(--red);text-decoration:none;
-  font-family:"JetBrains Mono",monospace;font-weight:700;margin-bottom:16px;word-break:break-all}
+  font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:8px;
+  overflow-wrap:break-word;word-break:break-word;hyphens:auto}
+.story-link{display:inline-block;max-width:100%;font-size:12px;color:var(--red);text-decoration:none;
+  font-family:"JetBrains Mono",monospace;font-weight:700;margin-bottom:16px;word-break:break-all;overflow-wrap:anywhere}
 .story-link:hover{text-decoration:underline;background:var(--yellow)}
 .velobar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--paper);
   border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);margin-bottom:14px}

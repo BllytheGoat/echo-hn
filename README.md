@@ -50,3 +50,5 @@ Live at: **https://echo-hn.vercel.app**
 ---
 
 *Built with the `frontend-design` skill — distinctive, not templated.*
+
+<!-- deploy trigger -->

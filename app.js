@@ -25,6 +25,13 @@ function markSummarized(id) {
   setCookie("echo_summarized", [...set].join(","), 30); // 30-day window
 }
 function isSummarized(id) { return summarizedIds().includes(String(id)); }
+// cache of generated summary text per topic (survives reload via cookie)
+function summaryCache() { try { return JSON.parse(getCookie("echo_cache") || "{}"); } catch { return {}; } }
+function saveSummaryCache(id, text) {
+  const c = summaryCache(); c[String(id)] = text;
+  setCookie("echo_cache", JSON.stringify(c), 30);
+}
+function getSummaryCache(id) { return summaryCache()[String(id)] || ""; }
 
 function timeAgo(t) {
   const s = Math.floor(Date.now() / 1000 - t);
@@ -131,7 +138,15 @@ async function selectStory(id) {
   const v = velocity(it);
   $("#s-velo").style.width = veloPct(v) + "%";
   $("#s-velo-num").textContent = v.toFixed(1) + " replies/min";
-  $("#summary-box").hidden = true; $("#summary-box").textContent = "";
+  // restore a previously generated summary if this topic was already summarized (cache + cookie)
+  const box = $("#summary-box");
+  if (isSummarized(id)) {
+    const cached = getSummaryCache(id);
+    if (cached) { box.hidden = false; box.className = "summary-box"; box.textContent = cached; }
+    else { box.hidden = true; box.textContent = ""; }
+  } else {
+    box.hidden = true; box.textContent = "";
+  }
   commentsEl.innerHTML = '<div class="loading">loading the conversation…</div>';
   loadComments(it.kids || [], 0);
 }
@@ -166,13 +181,13 @@ $("#summary-btn").addEventListener("click", async () => {
     });
     const j = await r.json();
     const text = j.choices?.[0]?.message?.content || "";
-    renderSummary(box, text);
+    renderSummary(box, text, id);
   } catch (e) {
     box.className = "summary-box error"; box.textContent = "Summary unavailable right now.";
   }
   btn.disabled = false;
 });
-function renderSummary(box, text) {
+function renderSummary(box, text, id) {
   const lines = text.split("\n").map((l) => l.replace(/^[\s>*•\-]+/, "").trim()).filter(Boolean);
   box.className = "summary-box"; box.innerHTML = "";
   const head = document.createElement("div"); head.className = "sum-head"; head.textContent = "✨ What the comments are saying";
@@ -180,6 +195,7 @@ function renderSummary(box, text) {
   const ul = document.createElement("ul");
   lines.slice(0, 5).forEach((line) => { const li = document.createElement("li"); li.textContent = line; ul.appendChild(li); });
   if (!lines.length) { box.textContent = text || "No summary available."; } else { box.appendChild(ul); }
+  if (id != null) saveSummaryCache(id, box.innerHTML);  // persist HTML so return/reload restores it
 }
 async function loadCommentTexts(kids, n) {
   const out = [];

@@ -165,9 +165,9 @@ async function loadCommentTexts(kids, n) {
 // ---------- comments ----------
 async function loadComments(kids, depth) {
   if (!kids.length) { if (!commentsEl.children.length) commentsEl.innerHTML = '<div class="loading">no comments yet</div>'; return; }
-  // clear the "loading the conversation…" placeholder before appending real comments
+  // clear any "loading the conversation…" placeholder before appending real comments
   const ph = commentsEl.querySelector('.loading');
-  if (ph && ph.textContent.includes('loading the conversation')) ph.remove();
+  if (ph) ph.remove();
   const batch = kids.slice(0, depth === 0 ? 12 : 6);
   const items = await Promise.all(batch.map((k) => getJSON(`${API}/item/${k}.json`)));
   for (const c of items.filter(Boolean)) {

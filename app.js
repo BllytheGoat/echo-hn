@@ -9,6 +9,23 @@ const commentsEl = $("#comments");
 const state = { feed: "top", sort: "hot", selected: null, items: {}, prevDesc: {} };
 const FEEDS = { top: "topstories", new: "newstories", ask: "askstories", show: "showstories", job: "jobstories" };
 
+// ---------- cookie helpers (persist summarized topics across reloads) ----------
+function setCookie(name, value, days) {
+  const maxAge = days * 86400;
+  document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${maxAge};samesite=lax`;
+}
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return m ? decodeURIComponent(m[2]) : "";
+}
+// store of topic ids that already consumed their 1 summary (survives reload/close)
+function summarizedIds() { return (getCookie("echo_summarized") || "").split(",").filter(Boolean); }
+function markSummarized(id) {
+  const set = new Set(summarizedIds()); set.add(String(id));
+  setCookie("echo_summarized", [...set].join(","), 30); // 30-day window
+}
+function isSummarized(id) { return summarizedIds().includes(String(id)); }
+
 function timeAgo(t) {
   const s = Math.floor(Date.now() / 1000 - t);
   if (s < 60) return s + "s";
@@ -119,22 +136,24 @@ async function selectStory(id) {
   loadComments(it.kids || [], 0);
 }
 
-// ---------- AI summary (rate-limited: 1 summary per topic) ----------
-let summaryUsedFor = null;   // id of the topic that already used its 1 summary
+// ---------- AI summary (rate-limited: 1 summary per topic, persisted in cookie) ----------
+let summaryUsedFor = null;   // id of the topic that already used its 1 summary (this session)
 function updateSummaryBtn() {
   const btn = $("#summary-btn");
-  if (summaryUsedFor === state.selected) { btn.disabled = true; btn.textContent = "✨ Summary used for this topic"; }
+  const id = state.selected;
+  if (id != null && (summaryUsedFor === id || isSummarized(id))) { btn.disabled = true; btn.textContent = "✨ Summary used for this topic"; }
   else { btn.disabled = false; btn.textContent = "✨ Summarize the debate"; }
 }
 $("#summary-btn").addEventListener("click", async () => {
-  if (summaryUsedFor === state.selected) { updateSummaryBtn(); return; }
+  const id = state.selected;
+  if (id != null && (summaryUsedFor === id || isSummarized(id))) { updateSummaryBtn(); return; }
   const box = $("#summary-box");
   const btn = $("#summary-btn");
   const it = state.items[state.selected];
   if (!it) return;
   box.hidden = false; box.className = "summary-box loading"; box.textContent = "Reading the debate…";
   btn.disabled = true;
-  summaryUsedFor = state.selected; updateSummaryBtn();
+  summaryUsedFor = id; markSummarized(id); updateSummaryBtn();  // persist immediately so reload can't re-summarize
   const top = await loadCommentTexts(it.kids || [], 8);
   if (!top.length) { box.className = "summary-box error"; box.textContent = "No comments yet to summarize."; btn.disabled = false; return; }
   try {

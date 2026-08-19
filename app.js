@@ -114,8 +114,12 @@ async function selectStory(id) {
   $("#s-velo").style.width = veloPct(v) + "%";
   $("#s-velo-num").textContent = v.toFixed(1) + " replies/min";
   $("#summary-box").hidden = true; $("#summary-box").textContent = "";
+  $("#explain-box").hidden = true; $("#explain-text").textContent = "";
+  const it0 = it;
   commentsEl.innerHTML = '<div class="loading">loading the conversation…</div>';
   loadComments(it.kids || [], 0);
+  explainStory(it0, false);
+  loadEchoComments(id);
 }
 
 // ---------- AI summary ----------
@@ -161,6 +165,28 @@ async function loadCommentTexts(kids, n) {
   }
   return out;
 }
+
+// ---------- #4 Explain-like-I'm-new (auto context) ----------
+async function explainStory(it, refresh) {
+  const box = $("#explain-box"); const txt = $("#explain-text");
+  if (!refresh) box.hidden = false;
+  txt.className = "explain-text loading"; txt.textContent = "Explaining for newcomers…";
+  try {
+    const r = await fetch(GROQ, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${GROQ_KEY}` },
+      body: JSON.stringify({ model: "groq/compound-mini", messages: [{ role: "user", content:
+        `In 2 plain-English sentences (no jargon, no markdown), explain what this Hacker News story is about and why a newcomer should care. Title: "${it.title}". URL context: ${it.url || ""}.` }], temperature: 0.3, max_tokens: 120 })
+    });
+    const j = await r.json();
+    const text = j.choices?.[0]?.message?.content?.trim() || "";
+    txt.className = "explain-text";
+    txt.textContent = text || "Context unavailable.";
+  } catch (e) {
+    txt.className = "explain-text error"; txt.textContent = "Couldn't load context right now.";
+  }
+}
+$("#explain-refresh").addEventListener("click", () => { const it = state.items[state.selected]; if (it) explainStory(it, true); });
 
 // ---------- comments ----------
 async function loadComments(kids, depth) {
@@ -278,6 +304,60 @@ document.querySelector(".brand").addEventListener("click", () => {
   if (window.matchMedia("(max-width: 820px)").matches && $("#reader").classList.contains("open")) {
     closeReader();
   }
+});
+
+// ---------- #5 ECHO discussion (local comments + sign-in gate) ----------
+// NOTE: local-only for now. To make multi-user, swap the store functions for a
+// backend (Flask+SQLite+OAuth). API shape is ready: getComments(id)/addComment(id,body).
+function ecStore() { return JSON.parse(localStorage.getItem("echo_comments") || "{}"); }
+function ecSave(s) { localStorage.setItem("echo_comments", JSON.stringify(s)); }
+function getComments(id) { return ecStore()[id] || []; }
+function addComment(id, body, author) {
+  const s = ecStore();
+  s[id] = s[id] || [];
+  const c = { id: Date.now(), by: author, body, ts: Date.now(), reactions: { "👍": 0, "🔥": 0, "💡": 0 } };
+  s[id].unshift(c); ecSave(s); return c;
+}
+function react(id, cid, emoji) {
+  const s = ecStore(); const list = s[id] || [];
+  const c = list.find((x) => x.id === cid); if (!c) return;
+  c.reactions[emoji] = (c.reactions[emoji] || 0) + 1; ecSave(s);
+}
+
+let ecUser = localStorage.getItem("echo_user") || "";
+function ecRender(id) {
+  const list = $("#ec-list"); const status = $("#ec-status");
+  const compose = $("#ec-compose"); const input = $("#ec-input"); const post = $("#ec-post");
+  if (!ecUser) {
+    status.textContent = "Sign in to join the discussion (saved on this device).";
+    compose.style.display = "none";
+  } else {
+    status.textContent = `Signed in as ${ecUser}`;
+    compose.style.display = "flex"; input.disabled = false; post.disabled = false;
+  }
+  const cs = getComments(id);
+  if (!cs.length) { list.innerHTML = '<div class="ec-empty">No ECHO comments yet — be the first.</div>'; return; }
+  list.innerHTML = "";
+  cs.forEach((c) => {
+    const el = document.createElement("div"); el.className = "ec-item";
+    const reacts = Object.entries(c.reactions || {}).map(([e, n]) =>
+      `<button class="ec-react" data-cid="${c.id}" data-emoj="${e}">${e} ${n}</button>`).join("");
+    el.innerHTML = `<div class="ec-by">${esc(c.by)}</div><div class="ec-body">${esc(c.body)}</div>
+      <div class="ec-meta">${timeAgo(c.ts / 1000)} ago</div><div class="ec-reactions">${reacts}</div>`;
+    el.querySelectorAll(".ec-react").forEach((b) => b.addEventListener("click", () => {
+      react(id, Number(b.dataset.cid), b.dataset.emoj); ecRender(id);
+    }));
+    list.appendChild(el);
+  });
+}
+function loadEchoComments(id) { ecRender(id); }
+$("#ec-signin").addEventListener("click", () => {
+  const name = prompt("Pick a display name (stored on this device):", ecUser || "anon");
+  if (name) { ecUser = name.trim() || "anon"; localStorage.setItem("echo_user", ecUser); ecRender(state.selected); }
+});
+$("#ec-post").addEventListener("click", () => {
+  const v = $("#ec-input").value.trim(); if (!v || !ecUser) return;
+  addComment(state.selected, v, ecUser); $("#ec-input").value = ""; ecRender(state.selected);
 });
 
 // ---------- theme morph ----------

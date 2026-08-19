@@ -95,6 +95,7 @@ async function selectStory(id) {
   const it = state.items[id];
   $("#story").hidden = false;
   $("#reader").classList.add("open");
+  document.body.classList.add("has-open-reader");
   const saved = isSaved(id);
   const sb = $("#save-btn");
   sb.textContent = saved ? "★ Saved" : "☆ Save";
@@ -262,11 +263,13 @@ if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none"
 function closeReader() {
   $("#story").hidden = true;
   $("#reader").classList.remove("open");
+  document.body.classList.remove("has-open-reader");
   state.selected = null;
   document.querySelectorAll(".fitem").forEach((e) => e.classList.remove("active"));
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 $("#reader-back").addEventListener("click", closeReader);
+$("#reader-back-tab").addEventListener("click", closeReader);
 // tapping the ECHO brand also returns to the feed (escape hatch on mobile)
 document.querySelector(".brand").addEventListener("click", () => {
   if (window.matchMedia("(max-width: 820px)").matches && $("#reader").classList.contains("open")) {

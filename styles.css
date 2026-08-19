@@ -156,6 +156,14 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .modal-box button:active{transform:translate(2px,2px);box-shadow:0 0 0}
 .footer{text-align:center;font-size:11px;color:var(--ink);font-family:"JetBrains Mono",monospace;padding-top:4px;font-weight:600}
 
+/* ===== theme morph (circular reveal) ===== */
+.theme-morph{position:fixed;inset:0;z-index:50;pointer-events:none;
+  background:var(--ink);opacity:0;visibility:hidden}
+.theme-morph.run{visibility:visible;opacity:1;
+  clip-path:circle(0% at var(--mx,90%) var(--my,5%));
+  transition:clip-path .55s cubic-bezier(.7,0,.3,1)}
+.theme-morph.run.go{clip-path:circle(150% at var(--mx,90%) var(--my,5%))}
+
 /* ===== DARK theme (brutalist dark — refined) ===== */
 [data-theme="dark"]{
   --paper:#0E0E12;

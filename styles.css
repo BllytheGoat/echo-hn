@@ -69,11 +69,11 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 
 /* reader */
 .reader{background:#fff;border:3px solid var(--line);box-shadow:6px 6px 0 var(--red);
-  border-radius:var(--r);min-height:82vh;padding:20px;overflow-y:auto;max-height:82vh}
+  border-radius:var(--r);padding:20px;overflow-y:auto;max-height:82vh}
 .reader-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;text-align:center;color:var(--ink);gap:8px;font-weight:500}
-.reader-glyph{font-size:42px;color:var(--line)}
-.reader-empty .hint{font-size:13px;max-width:34ch;font-weight:600}
+  min-height:60vh;text-align:center;color:var(--ink);gap:8px;font-weight:500;padding:20px}
+.reader-glyph{font-size:34px;color:var(--line);margin-bottom:4px}
+.reader-empty .hint{font-size:13px;max-width:34ch;font-weight:600;line-height:1.5}
 .story-actions{margin-bottom:10px}
 .save-btn{background:var(--yellow);border:2px solid var(--line);color:var(--ink);
   box-shadow:3px 3px 0 var(--line);border-radius:0;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:800}

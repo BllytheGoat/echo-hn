@@ -273,6 +273,7 @@ function applyTheme(t) { document.documentElement.setAttribute("data-theme", t);
 function toggleTheme() {
   const cur = document.documentElement.getAttribute("data-theme");
   const next = cur === "dark" ? "light" : "dark";
+  if (!morph) { applyTheme(next); return; } // graceful fallback if morph missing
   const r = themeBtn.getBoundingClientRect();
   morph.style.setProperty("--mx", (r.left + r.width / 2) + "px");
   morph.style.setProperty("--my", (r.top + r.height / 2) + "px");

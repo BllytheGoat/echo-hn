@@ -1,8 +1,5 @@
 {
-  "name": "echo-hn",
-  "version": 2,
-  "buildCommand": "",
+  "buildCommand": "echo \"window.ECHO_CONFIG={groqKey:'$GROQ_KEY'}\" > config.js && echo built",
   "outputDirectory": ".",
-  "framework": "static",
-  "rewrites": []
+  "framework": null
 }

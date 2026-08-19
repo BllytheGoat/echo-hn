@@ -149,3 +149,42 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .modal-box button{background:var(--yellow);color:var(--ink);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);border-radius:0;padding:8px 16px;font-weight:800;cursor:pointer}
 .modal-box button:active{transform:translate(2px,2px);box-shadow:0 0 0}
 .footer{text-align:center;font-size:11px;color:var(--ink);font-family:"JetBrains Mono",monospace;padding-top:4px;font-weight:600}
+
+/* ===== DARK theme (brutalist dark) ===== */
+[data-theme="dark"]{
+  --paper:#121212;
+  --ink:#F2F2F2;
+  --red:#FF4D2E;
+  --yellow:#FFE600;
+  --line:#F2F2F2;
+}
+[data-theme="dark"] body{background:var(--paper)}
+[data-theme="dark"] .feed,
+[data-theme="dark"] .reader,
+[data-theme="dark"] .fitem,
+[data-theme="dark"] .tab,
+[data-theme="dark"] .save-btn,
+[data-theme="dark"] .summary-btn,
+[data-theme="dark"] .modal-box,
+[data-theme="dark"] .room-item,
+[data-theme="dark"] .room-new input,
+[data-theme="dark"] .rooms-head button,
+[data-theme="dark"] .help-btn{background:#1c1c1c}
+[data-theme="dark"] .feed-tabs,
+[data-theme="dark"] .onboard,
+[data-theme="dark"] .velobar,
+[data-theme="dark"] .rooms-panel{background:#1c1c1c}
+[data-theme="dark"] .fvelo-bar,
+[data-theme="dark"] .velo-track{background:#2a2a2a}
+[data-theme="dark"] .summary-box,
+[data-theme="dark"] .cm-text{border-color:var(--line)}
+[data-theme="dark"] .modal{background:rgba(0,0,0,.7)}
+[data-theme="dark"] .help-btn{background:var(--yellow);color:var(--ink)}
+[data-theme="dark"] .room-new button{background:var(--red);color:#fff}
+
+/* theme toggle button */
+.theme-btn{width:auto;padding:0 12px;height:32px;border-radius:0;border:2px solid var(--line);
+  background:var(--yellow);color:var(--ink);font-size:13px;cursor:pointer;font-weight:800;
+  font-family:"Inter",sans-serif;display:flex;align-items:center;gap:5px}
+.theme-btn:hover{box-shadow:2px 2px 0 var(--line)}
+.theme-btn:active{transform:translate(2px,2px);box-shadow:0 0 0}

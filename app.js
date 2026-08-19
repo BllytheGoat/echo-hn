@@ -317,19 +317,32 @@ $("#help-close").addEventListener("click", () => $("#help-modal").hidden = true)
 $("#onboard-close").addEventListener("click", () => { $("#onboard").style.display = "none"; localStorage.setItem("echo_onboarded", "1"); });
 if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none";
 
-// ---- theme toggle (dark/light) ----
+// ---- theme toggle (dark/light) with morph ----
 const themeBtn = $("#theme-btn");
+const morph = $("#theme-morph");
 function applyTheme(t) {
   document.documentElement.setAttribute("data-theme", t);
   themeBtn.textContent = t === "dark" ? "☀️ Light" : "🌙 Dark";
   localStorage.setItem("echo_theme", t);
 }
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  // origin = button center
+  const r = themeBtn.getBoundingClientRect();
+  morph.style.setProperty("--mx", (r.left + r.width / 2) + "px");
+  morph.style.setProperty("--my", (r.top + r.height / 2) + "px");
+  morph.style.background = next === "dark" ? "#0E0E12" : "#F5F1E8";
+  morph.classList.add("run");
+  requestAnimationFrame(() => morph.classList.add("go"));
+  // swap theme at ~halfway so the new colors are revealed by the circle
+  setTimeout(() => applyTheme(next), 240);
+  // cleanup after animation
+  setTimeout(() => { morph.classList.remove("run", "go"); }, 650);
+}
 const savedTheme = localStorage.getItem("echo_theme") || "light";
 applyTheme(savedTheme);
-themeBtn.addEventListener("click", () => {
-  const cur = document.documentElement.getAttribute("data-theme");
-  applyTheme(cur === "dark" ? "light" : "dark");
-});
+themeBtn.addEventListener("click", toggleTheme);
 
 loadFeed();
 setInterval(loadFeed, 45000);

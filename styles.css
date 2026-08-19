@@ -102,6 +102,44 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .summary-box ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0}
 .summary-box li{position:relative;padding-left:20px;color:var(--ink);font-weight:500}
 .summary-box li::before{content:"▸";position:absolute;left:0;color:var(--red);font-weight:800}
+
+/* ===== #4 Explain-like-I'm-new ===== */
+.explain-box{background:var(--paper);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);
+  padding:12px 14px;margin-bottom:14px}
+.explain-head{display:flex;justify-content:space-between;align-items:center;font-family:"JetBrains Mono",monospace;
+  font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:6px}
+.explain-refresh{background:var(--yellow);border:2px solid var(--line);color:var(--ink);font-weight:800;
+  width:26px;height:26px;cursor:pointer;font-size:14px}
+.explain-refresh:active{transform:translate(2px,2px)}
+.explain-text{font-size:14px;line-height:1.55;color:var(--ink);font-weight:500}
+.explain-text.loading{font-style:italic;opacity:.7}
+.explain-text.error{color:var(--red)}
+
+/* ===== #5 ECHO discussion (local comments) ===== */
+.echo-comments{margin-top:18px;border-top:3px solid var(--line);padding-top:14px}
+.ec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ec-head h3{font-family:"Space Grotesk",sans-serif;font-size:15px;font-weight:800}
+.ec-signin{background:var(--yellow);border:2px solid var(--line);color:var(--ink);box-shadow:2px 2px 0 var(--line);
+  padding:5px 12px;cursor:pointer;font-weight:800;font-size:12px}
+.ec-signin:active{transform:translate(2px,2px);box-shadow:0 0 0}
+.ec-status{font-size:12px;color:var(--ink);font-weight:600;margin-bottom:8px;font-family:"JetBrains Mono",monospace}
+.ec-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.ec-item{background:#fff;border:2px solid var(--line);box-shadow:2px 2px 0 var(--line);padding:10px 12px}
+.ec-item .ec-by{font-weight:800;font-size:13px}
+.ec-item .ec-body{font-size:14px;line-height:1.5;margin:4px 0;color:var(--ink);font-weight:500;overflow-wrap:break-word;word-break:break-word}
+.ec-item .ec-meta{font-size:11px;color:var(--ink);font-family:"JetBrains Mono",monospace;opacity:.8}
+.ec-reactions{margin-top:6px;display:flex;gap:6px}
+.ec-react{background:var(--paper);border:2px solid var(--line);cursor:pointer;font-size:13px;padding:2px 8px;font-weight:700}
+.ec-react:active{transform:translate(1px,1px)}
+.ec-empty{font-size:13px;color:var(--ink);font-weight:500;opacity:.7;font-style:italic}
+.ec-compose{display:flex;flex-direction:column;gap:6px}
+.ec-compose textarea{background:#fff;border:2px solid var(--line);border-radius:0;padding:8px 10px;
+  color:var(--ink);font-family:inherit;font-size:13px;font-weight:500;resize:vertical}
+.ec-compose textarea:disabled{opacity:.5}
+.ec-compose button{align-self:flex-end;background:var(--red);color:#fff;border:2px solid var(--line);
+  box-shadow:2px 2px 0 var(--line);padding:6px 16px;cursor:pointer;font-weight:800;font-size:13px}
+.ec-compose button:active{transform:translate(2px,2px);box-shadow:0 0 0}
+.ec-compose button:disabled{opacity:.5;cursor:not-allowed}
 .summary-box.loading{color:var(--ink);font-style:italic;border-left-color:var(--line);font-weight:600}
 .summary-box.error{color:var(--red);border-left-color:var(--red);font-weight:700}
 .comments{display:flex;flex-direction:column;gap:14px}

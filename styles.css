@@ -228,9 +228,10 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
     overflow-y:auto;animation:slideup .26s cubic-bezier(.2,.8,.2,1);background:var(--paper)}
   @keyframes slideup{from{transform:translateY(6%)}to{transform:translateY(0)}}
 
-  .reader-back{display:inline-block;background:var(--yellow);border:2px solid var(--line);
+  .reader-back{display:inline-block;position:sticky;top:0;z-index:5;
+    background:var(--yellow);border:2px solid var(--line);
     box-shadow:2px 2px 0 var(--line);color:var(--ink);font-weight:800;font-size:13px;
-    padding:8px 14px;cursor:pointer;margin-bottom:10px}
+    padding:8px 14px;cursor:pointer;margin:0 0 10px}
   .reader-back:active{transform:translate(2px,2px);box-shadow:0 0 0}
   .reader .story-title{font-size:25px}
   .save-btn,.summary-btn{height:42px;font-size:15px}

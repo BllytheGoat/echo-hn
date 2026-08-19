@@ -154,15 +154,15 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
   transition:clip-path .55s cubic-bezier(.7,0,.3,1)}
 .theme-morph.run.go{clip-path:circle(150% at var(--mx,90%) var(--my,5%))}
 
-/* ===== DARK theme (brutalist dark — refined) ===== */
+/* ===== DARK theme (brutalist dark — yellow/white/black identity) ===== */
 [data-theme="dark"]{
   --paper:#0E0E12;
-  --ink:#E8E8EC;
+  --ink:#F2F2F0;
   --red:#FF5C3D;
   --yellow:#FFE600;
-  --line:rgba(255,255,255,0.14);
+  --line:rgba(255,255,255,0.16);
 }
-[data-theme="dark"] body{background:var(--paper)}
+[data-theme="dark"] body{background:var(--paper);color:var(--ink)}
 [data-theme="dark"] .feed,
 [data-theme="dark"] .reader,
 [data-theme="dark"] .fitem,
@@ -173,25 +173,28 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 [data-theme="dark"] .room-item,
 [data-theme="dark"] .room-new input,
 [data-theme="dark"] .rooms-head button,
-[data-theme="dark"] .help-btn{background:#16161C;border-color:var(--line)}
+[data-theme="dark"] .help-btn{background:#15151B;border-color:var(--line);color:var(--ink)}
 [data-theme="dark"] .feed,
 [data-theme="dark"] .reader{box-shadow:6px 6px 0 #000}
 [data-theme="dark"] .fitem{box-shadow:3px 3px 0 #000}
 [data-theme="dark"] .feed-tabs,
 [data-theme="dark"] .onboard,
 [data-theme="dark"] .velobar,
-[data-theme="dark"] .rooms-panel{background:#16161C}
-[data-theme="dark"] .onboard{background:#1C1C22}
+[data-theme="dark"] .rooms-panel{background:#15151B}
+[data-theme="dark"] .onboard{background:#1B1B22}
+/* links stay on-brand: red, not browser blue */
+[data-theme="dark"] .story-link{color:var(--red)}
+[data-theme="dark"] .cm-text a{color:var(--red);text-decoration:underline}
 [data-theme="dark"] .fvelo-bar,
 [data-theme="dark"] .velo-track{background:#2A2A32}
-[data-theme="dark"] .summary-box{background:#1A1A20}
+[data-theme="dark"] .summary-box{background:#17171E}
 [data-theme="dark"] .cm-text{border-color:var(--line)}
-[data-theme="dark"] .modal{background:rgba(0,0,0,.75)}
-[data-theme="dark"] .help-btn{background:var(--yellow);color:var(--ink)}
+[data-theme="dark"] .modal{background:rgba(0,0,0,.78)}
+[data-theme="dark"] .help-btn{background:var(--yellow);color:#0E0E12}
 [data-theme="dark"] .room-new button{background:var(--red);color:#fff}
-[data-theme="dark"] .tab:hover{background:#22222A}
+[data-theme="dark"] .tab:hover{background:#23232B}
 [data-theme="dark"] .tab.active{background:var(--red);color:#fff}
-[data-theme="dark"] .fitem.active{background:#22222A}
+[data-theme="dark"] .fitem.active{background:#23232B}
 [data-theme="dark"] .hot-badge{background:var(--yellow);color:#0E0E12}
 [data-theme="dark"] .loading{color:var(--ink)}
 
@@ -224,15 +227,26 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
   /* only the OPEN reader takes over the screen */
   .reader.open{position:fixed;inset:0;z-index:40;max-height:none;height:100dvh;
     border-width:0;box-shadow:none;border-radius:0;
-    padding:16px 16px calc(24px + env(safe-area-inset-bottom));
+    padding:64px 16px calc(72px + env(safe-area-inset-bottom));
     overflow-y:auto;animation:slideup .26s cubic-bezier(.2,.8,.2,1);background:var(--paper)}
-  @keyframes slideup{from{transform:translateY(6%)}to{transform:translateY(0)}}
 
-  .reader-back{display:inline-block;position:sticky;top:0;z-index:5;
-    background:var(--yellow);border:2px solid var(--line);
+  /* FIXED back bar — always visible, never depends on scroll */
+  .reader-back{display:none}
+  .reader.open .reader-back{display:inline-block;position:fixed;top:calc(10px + env(safe-area-inset-top));
+    left:10px;right:auto;z-index:60;background:var(--yellow);border:2px solid var(--line);
     box-shadow:2px 2px 0 var(--line);color:var(--ink);font-weight:800;font-size:13px;
-    padding:8px 14px;cursor:pointer;margin:0 0 10px}
-  .reader-back:active{transform:translate(2px,2px);box-shadow:0 0 0}
+    padding:9px 14px;cursor:pointer}
+  .reader.open .reader-back:active{transform:translate(2px,2px);box-shadow:0 0 0}
+
+  /* FIXED bottom back tab — second guarantee */
+  .reader-back-tab{display:none}
+  .reader.open ~ .reader-back-tab,
+  body.has-open-reader .reader-back-tab{display:flex}
+  .reader-back-tab{position:fixed;left:0;right:0;bottom:0;z-index:60;
+    height:calc(54px + env(safe-area-inset-bottom));align-items:center;justify-content:center;
+    gap:8px;background:var(--yellow);border-top:3px solid var(--line);color:#0E0E12;
+    font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 -3px 0 rgba(0,0,0,.25)}
+
   .reader .story-title{font-size:25px}
   .save-btn,.summary-btn{height:42px;font-size:15px}
   .summary-btn{width:100%}

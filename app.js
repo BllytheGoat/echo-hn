@@ -328,20 +328,17 @@ function applyTheme(t) {
 function toggleTheme() {
   const cur = document.documentElement.getAttribute("data-theme");
   const next = cur === "dark" ? "light" : "dark";
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) { applyTheme(next); return; }
+  // origin = button center
   const r = themeBtn.getBoundingClientRect();
   morph.style.setProperty("--mx", (r.left + r.width / 2) + "px");
   morph.style.setProperty("--my", (r.top + r.height / 2) + "px");
   morph.style.background = next === "dark" ? "#0E0E12" : "#F5F1E8";
-  themeBtn.classList.add("pulse");
-  setTimeout(() => themeBtn.classList.remove("pulse"), 460);
-  // gentle crossfade begins immediately (under the circle)
-  morph.classList.add("fade");
-  requestAnimationFrame(() => requestAnimationFrame(() => morph.classList.add("run", "go")));
-  // swap theme just as the circle passes the midpoint — feels like it's "painting" in
-  setTimeout(() => applyTheme(next), 300);
-  setTimeout(() => { morph.classList.remove("run", "go", "fade"); }, 780);
+  morph.classList.add("run");
+  requestAnimationFrame(() => morph.classList.add("go"));
+  // swap theme at ~halfway so the new colors are revealed by the circle
+  setTimeout(() => applyTheme(next), 240);
+  // cleanup after animation
+  setTimeout(() => { morph.classList.remove("run", "go"); }, 650);
 }
 const savedTheme = localStorage.getItem("echo_theme") || "light";
 applyTheme(savedTheme);

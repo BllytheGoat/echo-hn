@@ -93,7 +93,6 @@ async function selectStory(id) {
   state.selected = id;
   document.querySelectorAll(".fitem").forEach((e) => e.classList.toggle("active", e.dataset.id == id));
   const it = state.items[id];
-  $("#reader-empty").hidden = true;
   $("#story").hidden = false;
   $("#reader").classList.add("open");
   const saved = isSaved(id);
@@ -263,7 +262,6 @@ if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none"
 $("#reader-back").addEventListener("click", () => {
   $("#story").hidden = true;
   $("#reader").classList.remove("open");
-  $("#reader-empty").hidden = false;
   state.selected = null;
   document.querySelectorAll(".fitem").forEach((e) => e.classList.remove("active"));
   window.scrollTo({ top: 0, behavior: "smooth" });

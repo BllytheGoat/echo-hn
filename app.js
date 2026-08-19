@@ -90,11 +90,8 @@ function renderFeed(items) {
 
 // ---------- reader ----------
 async function selectStory(id) {
-  // summary rate-limit window: count topics, reset every SUMMARY_WINDOW
-  topicCount++;
-  if (topicCount > SUMMARY_WINDOW) { topicCount = 1; summaryUses = 0; }
-  updateSummaryBtn();
   state.selected = id;
+  updateSummaryBtn();   // reset summary button for this topic (1 summary allowed per topic)
   document.querySelectorAll(".fitem").forEach((e) => e.classList.toggle("active", e.dataset.id == id));
   const it = state.items[id];
   $("#story").hidden = false;
@@ -122,25 +119,22 @@ async function selectStory(id) {
   loadComments(it.kids || [], 0);
 }
 
-// ---------- AI summary (rate-limited: 2 uses per 5 topics) ----------
-const SUMMARY_LIMIT = 2, SUMMARY_WINDOW = 5;
-let topicCount = 0;        // topics opened in current window
-let summaryUses = 0;       // summaries used in current window
+// ---------- AI summary (rate-limited: 1 summary per topic) ----------
+let summaryUsedFor = null;   // id of the topic that already used its 1 summary
 function updateSummaryBtn() {
   const btn = $("#summary-btn");
-  const left = SUMMARY_LIMIT - summaryUses;
-  if (left <= 0) { btn.disabled = true; btn.textContent = `✨ Summary used (${SUMMARY_LIMIT}/${SUMMARY_WINDOW})`; }
-  else { btn.disabled = false; btn.textContent = `✨ Summarize the debate (${left} left)`; }
+  if (summaryUsedFor === state.selected) { btn.disabled = true; btn.textContent = "✨ Summary used for this topic"; }
+  else { btn.disabled = false; btn.textContent = "✨ Summarize the debate"; }
 }
 $("#summary-btn").addEventListener("click", async () => {
-  if (summaryUses >= SUMMARY_LIMIT) { updateSummaryBtn(); return; }
+  if (summaryUsedFor === state.selected) { updateSummaryBtn(); return; }
   const box = $("#summary-box");
   const btn = $("#summary-btn");
   const it = state.items[state.selected];
   if (!it) return;
   box.hidden = false; box.className = "summary-box loading"; box.textContent = "Reading the debate…";
   btn.disabled = true;
-  summaryUses++; updateSummaryBtn();
+  summaryUsedFor = state.selected; updateSummaryBtn();
   const top = await loadCommentTexts(it.kids || [], 8);
   if (!top.length) { box.className = "summary-box error"; box.textContent = "No comments yet to summarize."; btn.disabled = false; return; }
   try {

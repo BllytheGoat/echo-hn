@@ -1,33 +1,28 @@
 # ◈ ECHO — read the room on Hacker News
 
 A Hacker News reader that doesn't just list stories — it **reads the room**.
-ECHO surfaces what's actually happening on HN right now: which stories are
-climbing, how fast the debate is moving, and the real conversation underneath.
+ECHO shows what HN is *actually talking about right now*, in plain language,
+so even a first-time visitor gets it.
 
-Built for the Deeperlife hackathon track — a fast, opinionated take on a
-firehose everyone uses but nobody *reads*.
+Built for the Deeperlife hackathon — fast, opinionated, beginner-friendly.
 
-## The signature: comment velocity
+## What makes it different
 
-Every story gets a **velocity meter** — comments-per-minute since it was posted.
-A high velocity means the room is arguing. A flat line means it's already
-settled. You can sort the entire front page **by velocity** instead of by score,
-which surfaces the stories that are *exploding right now* — not the ones that won
-yesterday.
-
-## Features
-
-- **Five feeds:** Top · New · Ask · Show · Jobs
-- **Velocity sort:** reorder the feed by live comment velocity, not karma
-- **Live pulse:** refreshes every 60s, no login, no rate limit
-- **Threaded comments:** lazy-loaded, collapsible, real HN data
-- **PWA:** installable, offline shell, dark by design
-- **Zero backend:** talks straight to the official HN Firebase API
+- **🔥 Hot right now** — sorts the front page by how fast replies are arriving
+  *this minute* (delta velocity), not by total karma. Surfaces what's exploding now.
+- **Velocity meter** — "how fast people are replying" in plain words, per story.
+- **✨ Summarize the debate** — one click runs an LLM (Groq) over the top
+  comments and tells you what people are agreeing / arguing about.
+- **★ My rooms** — save stories into named rooms (e.g. "AI watch"), stored
+  on your device. No account needed.
+- **Beginner-friendly** — onboarding strip, help modal, plain labels, big taps.
+- **Zero backend** — talks straight to the official HN Firebase API + Groq for summaries.
 
 ## Stack
 
 - Static PWA — HTML + CSS + vanilla JS (no framework, no build step)
 - Hacker News API: `https://hacker-news.firebaseio.com/v0`
+- Groq (`groq/compound-mini`) for debate summaries
 - Fonts: Space Grotesk (display) · Inter (body) · JetBrains Mono (data)
 
 ## Run locally
@@ -39,16 +34,16 @@ python3 -m http.server 8099
 
 ## Deploy
 
-One-click on Vercel: import `BllytheGoat/echo-hn`. It's static — no config
-needed beyond the included `vercel.json`.
+Connected to Vercel — push to `main` and it redeploys automatically.
+Live at: **https://echo-hn.vercel.app**
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Structure |
-| `styles.css` | The dark "signal" design system |
-| `app.js` | HN fetching, velocity math, rendering |
+| `index.html` | Structure + onboarding + help |
+| `styles.css` | Dark "signal" design system, beginner-tuned |
+| `app.js` | HN fetching, hot/velocity logic, Groq summaries, rooms |
 | `manifest.json` / `icon.svg` | PWA shell |
 | `vercel.json` | Static deploy config |
 

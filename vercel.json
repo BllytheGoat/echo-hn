@@ -1,0 +1,8 @@
+{
+  "name": "echo-hn",
+  "version": 2,
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "framework": "static",
+  "rewrites": []
+}

@@ -113,6 +113,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--ink);color:var(--
 .loading{color:var(--mute);font-style:italic;padding:20px;text-align:center}
 
 /* rooms */
+.rooms-panel[hidden]{display:none}
 .rooms-panel{position:fixed;top:0;right:0;width:min(340px,90vw);height:100vh;background:var(--surface);
   border-left:1px solid var(--line);padding:18px;overflow-y:auto;z-index:10;box-shadow:-10px 0 30px rgba(0,0,0,.4)}
 .rooms-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
@@ -129,6 +130,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--ink);color:var(--
 .room-new button{background:var(--orange);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-weight:600;cursor:pointer}
 
 /* modal */
+.modal[hidden]{display:none}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:20}
 .modal-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;
   max-width:440px;width:90%}

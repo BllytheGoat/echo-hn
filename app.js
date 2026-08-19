@@ -258,13 +258,20 @@ $("#help-close").addEventListener("click", () => $("#help-modal").hidden = true)
 $("#onboard-close").addEventListener("click", () => { $("#onboard").style.display = "none"; localStorage.setItem("echo_onboarded", "1"); });
 if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none";
 
-// mobile: back arrow returns to feed
-$("#reader-back").addEventListener("click", () => {
+// mobile: back arrow (and brand tap) returns to feed
+function closeReader() {
   $("#story").hidden = true;
   $("#reader").classList.remove("open");
   state.selected = null;
   document.querySelectorAll(".fitem").forEach((e) => e.classList.remove("active"));
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+$("#reader-back").addEventListener("click", closeReader);
+// tapping the ECHO brand also returns to the feed (escape hatch on mobile)
+document.querySelector(".brand").addEventListener("click", () => {
+  if (window.matchMedia("(max-width: 820px)").matches && $("#reader").classList.contains("open")) {
+    closeReader();
+  }
 });
 
 // ---------- theme morph ----------

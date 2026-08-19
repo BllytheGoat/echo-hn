@@ -306,5 +306,19 @@ $("#help-close").addEventListener("click", () => $("#help-modal").hidden = true)
 $("#onboard-close").addEventListener("click", () => { $("#onboard").style.display = "none"; localStorage.setItem("echo_onboarded", "1"); });
 if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none";
 
+// ---- theme toggle (dark/light) ----
+const themeBtn = $("#theme-btn");
+function applyTheme(t) {
+  document.documentElement.setAttribute("data-theme", t);
+  themeBtn.textContent = t === "dark" ? "☀️ Light" : "🌙 Dark";
+  localStorage.setItem("echo_theme", t);
+}
+const savedTheme = localStorage.getItem("echo_theme") || "light";
+applyTheme(savedTheme);
+themeBtn.addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+
 loadFeed();
 setInterval(loadFeed, 45000);

@@ -18,14 +18,16 @@
         <span class="name">ECHO</span>
         <span class="tag">read the room</span>
       </div>
-      <div class="pulse" id="pulse">
-        <span class="pulse-dot"></span>
-        <span id="pulse-label">listening to HN…</span>
-      </div>
+      <button class="help-btn" id="help-btn" title="How to use ECHO">?</button>
     </header>
 
+    <!-- beginner onboarding strip (dismissible) -->
+    <div class="onboard" id="onboard">
+      <span>👋 New here? ECHO shows what Hacker News is <b>talking about right now</b>. Tap a story to read the conversation. Tap <b>"Hot right now"</b> to see what's exploding this minute.</span>
+      <button id="onboard-close">Got it</button>
+    </div>
+
     <main class="layout">
-      <!-- feed -->
       <section class="feed" id="feed">
         <div class="feed-tabs" id="tabs">
           <button class="tab active" data-feed="top">Top</button>
@@ -33,41 +35,76 @@
           <button class="tab" data-feed="ask">Ask</button>
           <button class="tab" data-feed="show">Show</button>
           <button class="tab" data-feed="job">Jobs</button>
-          <button class="tab sort" data-sort="velocity">⟳ by velocity</button>
+          <button class="tab sort active" id="sort-hot" data-sort="hot">🔥 Hot right now</button>
+          <button class="tab" id="rooms-btn">★ My rooms</button>
         </div>
         <div class="feed-list" id="feed-list">
           <div class="loading">tuning in…</div>
         </div>
       </section>
 
-      <!-- reader -->
       <section class="reader" id="reader">
         <div class="reader-empty" id="reader-empty">
           <div class="reader-glyph">◈</div>
           <p>Pick a story to read the room.</p>
-          <p class="hint">Velocity shows how fast comments are arriving — the faster, the louder the debate.</p>
+          <p class="hint">"Hot right now" shows stories gaining replies fastest. The meter tells you how fast people are talking.</p>
         </div>
         <article class="story" id="story" hidden>
+          <div class="story-actions">
+            <button class="save-btn" id="save-btn">☆ Save</button>
+          </div>
           <div class="story-meta">
-            <span class="story-rank" id="s-rank"></span>
             <span class="story-score" id="s-score"></span>
             <span class="story-by" id="s-by"></span>
             <span class="story-age" id="s-age"></span>
+            <span class="hot-badge" id="s-hot" hidden>🔥 Hot right now</span>
           </div>
           <h1 class="story-title" id="s-title"></h1>
           <a class="story-link" id="s-url" target="_blank" rel="noopener"></a>
           <div class="velobar">
-            <span class="velo-label">comment velocity</span>
+            <span class="velo-label">how fast people are replying</span>
             <div class="velo-track"><div class="velo-fill" id="s-velo"></div></div>
             <span class="velo-num" id="s-velo-num"></span>
           </div>
+          <button class="summary-btn" id="summary-btn">✨ Summarize the debate</button>
+          <div class="summary-box" id="summary-box" hidden></div>
           <div class="comments" id="comments">
             <div class="loading">loading the conversation…</div>
           </div>
         </article>
       </section>
     </main>
+
+    <!-- Rooms panel -->
+    <div class="rooms-panel" id="rooms-panel" hidden>
+      <div class="rooms-head">
+        <h2>★ My rooms</h2>
+        <button id="rooms-close">✕</button>
+      </div>
+      <p class="rooms-sub">Save stories into rooms to group them. Stored on your device.</p>
+      <div class="rooms-list" id="rooms-list"></div>
+      <div class="room-new">
+        <input type="text" id="room-name" placeholder="New room name (e.g. AI watch)">
+        <button id="room-add">Add</button>
+      </div>
+    </div>
   </div>
+
+  <!-- help modal -->
+  <div class="modal" id="help-modal" hidden>
+    <div class="modal-box">
+      <h2>How to use ECHO</h2>
+      <ul>
+        <li><b>Top / New / Ask / Show / Jobs</b> — pick what to read.</li>
+        <li><b>🔥 Hot right now</b> — sorts by how fast replies are arriving this minute (not total score).</li>
+        <li><b>Velocity meter</b> — how quickly people are commenting. Full bar = busy debate.</li>
+        <li><b>✨ Summarize the debate</b> — AI explains what commenters are arguing about.</li>
+        <li><b>☆ Save / ★ My rooms</b> — keep stories you like, grouped your way.</li>
+      </ul>
+      <button id="help-close">Close</button>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

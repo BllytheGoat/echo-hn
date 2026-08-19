@@ -123,15 +123,22 @@ async function selectStory(id) {
 // ---- AI debate summary (Groq) ----
 $("#summary-btn").addEventListener("click", async () => {
   const box = $("#summary-box");
+  const btn = $("#summary-btn");
   const it = state.items[state.selected];
   if (!it) return;
   box.hidden = false;
   box.className = "summary-box loading";
   box.textContent = "Reading the debate…";
+  btn.disabled = true;
   const top = await loadCommentTexts(it.kids || [], 8);
-  if (!top.length) { box.textContent = "No comments yet to summarize."; box.className = "summary-box"; return; }
+  if (!top.length) {
+    box.className = "summary-box error";
+    box.textContent = "No comments yet to summarize.";
+    btn.disabled = false;
+    return;
+  }
   try {
-    const prompt = `These are the top comments on a Hacker News story titled "${it.title}". Summarize in 3 short bullet points what people are agreeing, disagreeing, or debating about. Plain language, no jargon:\n\n` +
+    const prompt = `These are the top comments on a Hacker News story titled "${it.title}". Summarize in 3 short bullet points what people are agreeing, disagreeing, or debating about. Plain language, no jargon, no markdown:\n\n` +
       top.map((t, i) => `${i + 1}. ${t}`).join("\n");
     const r = await fetch(GROQ, {
       method: "POST",
@@ -139,12 +146,36 @@ $("#summary-btn").addEventListener("click", async () => {
       body: JSON.stringify({ model: "groq/compound-mini", messages: [{ role: "user", content: prompt }], temperature: 0.3, max_tokens: 250 })
     });
     const j = await r.json();
-    box.textContent = j.choices?.[0]?.message?.content || "Could not summarize.";
+    const text = j.choices?.[0]?.message?.content || "";
+    renderSummary(box, text);
   } catch (e) {
+    box.className = "summary-box error";
     box.textContent = "Summary unavailable right now.";
   }
-  box.className = "summary-box";
+  btn.disabled = false;
 });
+
+function renderSummary(box, text) {
+  // strip markdown bullet markers, split into points
+  const lines = text.split("\n").map((l) => l.replace(/^[\s>*•\-]+/, "").trim()).filter(Boolean);
+  box.className = "summary-box";
+  box.innerHTML = "";
+  const head = document.createElement("div");
+  head.className = "sum-head";
+  head.innerHTML = "✨ What the comments are saying";
+  box.appendChild(head);
+  const ul = document.createElement("ul");
+  lines.slice(0, 5).forEach((line) => {
+    const li = document.createElement("li");
+    li.textContent = line;
+    ul.appendChild(li);
+  });
+  if (!lines.length) {
+    box.textContent = text || "No summary available.";
+  } else {
+    box.appendChild(ul);
+  }
+}
 
 async function loadCommentTexts(kids, n) {
   const out = [];

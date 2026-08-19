@@ -95,6 +95,7 @@ async function selectStory(id) {
   const it = state.items[id];
   $("#reader-empty").hidden = true;
   $("#story").hidden = false;
+  $("#reader").classList.add("open");
   const saved = isSaved(id);
   const sb = $("#save-btn");
   sb.textContent = saved ? "★ Saved" : "☆ Save";
@@ -257,6 +258,16 @@ $("#help-btn").addEventListener("click", () => $("#help-modal").hidden = false);
 $("#help-close").addEventListener("click", () => $("#help-modal").hidden = true);
 $("#onboard-close").addEventListener("click", () => { $("#onboard").style.display = "none"; localStorage.setItem("echo_onboarded", "1"); });
 if (localStorage.getItem("echo_onboarded")) $("#onboard").style.display = "none";
+
+// mobile: back arrow returns to feed
+$("#reader-back").addEventListener("click", () => {
+  $("#story").hidden = true;
+  $("#reader").classList.remove("open");
+  $("#reader-empty").hidden = false;
+  state.selected = null;
+  document.querySelectorAll(".fitem").forEach((e) => e.classList.remove("active"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
 // ---------- theme morph ----------
 const themeBtn = $("#theme-btn"); const morph = $("#theme-morph");

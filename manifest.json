@@ -1,0 +1,12 @@
+{
+  "name": "ECHO — Hacker News reader",
+  "short_name": "ECHO",
+  "description": "Read the room on Hacker News: live velocity, climbing stories, real conversations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

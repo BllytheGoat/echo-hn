@@ -35,25 +35,36 @@ async function getJSON(u) {
 }
 
 async function loadFeed() {
+  // progressive: show skeletons instantly, then fill in as data arrives
   const ids = await getJSON(`${API}/${FEEDS[state.feed]}.json`);
   if (!ids) { feedList.innerHTML = '<div class="loading">HN unreachable. Retry?</div>'; return; }
   const slice = ids.slice(0, 30);
-  const items = (await Promise.all(slice.map((id) => getJSON(`${API}/item/${id}.json`)))).filter(Boolean);
-  // store descendants for delta calc
-  items.forEach((it) => {
-    if (state.prevDesc[it.id] === undefined) state.prevDesc[it.id] = it.descendants || 0;
+  // render skeleton placeholders immediately
+  feedList.innerHTML = "";
+  slice.forEach(() => {
+    const sk = document.createElement("div");
+    sk.className = "fitem skeleton";
+    sk.innerHTML = '<div class="sk-line" style="width:90%"></div><div class="sk-line" style="width:50%"></div><div class="sk-bar"></div>';
+    feedList.appendChild(sk);
   });
-  state.items = {};
-  items.forEach((it) => (state.items[it.id] = it));
+  // fetch all item details in parallel, render progressively
+  let loaded = [];
+  await Promise.all(slice.map(async (id) => {
+    const it = await getJSON(`${API}/item/${id}.json`);
+    if (!it) return;
+    if (state.prevDesc[it.id] === undefined) state.prevDesc[it.id] = it.descendants || 0;
+    state.items[it.id] = it;
+    loaded.push(it);
+    // re-sort & re-render incrementally so first items appear fast
+    sortItems(loaded);
+    renderFeed(loaded);
+  }));
+}
 
-  if (state.sort === "hot") {
-    items.sort((a, b) => deltaHot(b) - deltaHot(a));
-  } else if (state.sort === "velocity") {
-    items.sort((a, b) => velocity(b) - velocity(a));
-  } else {
-    items.sort((a, b) => (b.score || 0) - (a.score || 0));
-  }
-  renderFeed(items);
+function sortItems(items) {
+  if (state.sort === "hot") items.sort((a, b) => deltaHot(b) - deltaHot(a));
+  else if (state.sort === "velocity") items.sort((a, b) => velocity(b) - velocity(a));
+  else items.sort((a, b) => (b.score || 0) - (a.score || 0));
 }
 
 function renderFeed(items) {

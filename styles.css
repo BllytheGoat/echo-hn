@@ -212,3 +212,33 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(
 .modal-box button{background:var(--yellow);color:var(--ink);border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);border-radius:0;padding:8px 16px;font-weight:800;cursor:pointer}
 .modal-box button:active{transform:translate(2px,2px);box-shadow:0 0 0}
 .footer{text-align:center;font-size:11px;color:var(--ink);font-family:"JetBrains Mono",monospace;padding-top:4px;font-weight:600}
+
+/* ===== MOBILE: tap story → full-screen reader + back arrow ===== */
+.reader-back{display:none}
+@media (max-width: 820px) {
+  body{padding:10px}
+  .shell{gap:10px}
+  .name{font-size:18px}
+  .tag{display:none}
+  .layout{grid-template-columns:1fr}
+  .feed{max-height:none;border-width:2px}
+  .tab{font-size:12px;padding:7px 11px}
+  .fitem{padding:14px;margin-bottom:8px}
+  .ftitle{font-size:15px}
+
+  /* only the OPEN reader takes over the screen */
+  .reader.open{position:fixed;inset:0;z-index:40;max-height:none;height:100dvh;
+    border-width:0;box-shadow:none;border-radius:0;
+    padding:16px 16px calc(24px + env(safe-area-inset-bottom));
+    overflow-y:auto;animation:slideup .26s cubic-bezier(.2,.8,.2,1);background:var(--paper)}
+  @keyframes slideup{from{transform:translateY(6%)}to{transform:translateY(0)}}
+
+  .reader-back{display:inline-block;background:var(--yellow);border:2px solid var(--line);
+    box-shadow:2px 2px 0 var(--line);color:var(--ink);font-weight:800;font-size:13px;
+    padding:8px 14px;cursor:pointer;margin-bottom:10px}
+  .reader-back:active{transform:translate(2px,2px);box-shadow:0 0 0}
+  .reader .story-title{font-size:25px}
+  .save-btn,.summary-btn{height:42px;font-size:15px}
+  .summary-btn{width:100%}
+  .rooms-panel{width:100vw;box-shadow:none}
+}
